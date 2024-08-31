@@ -66,3 +66,37 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+
+.outrouser>div{
+  background: #1a1a1a;
+  justify-content: flex-start !important;
+}
+
+.mensagens{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 550px;
+  overflow: auto;
+}
+
+#root{
+  display: flex;
+  width: 100%;
+}
+
+.largo{
+  width: 100%;
+}
+
+.mensagem{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.mensagem>div{
+  max-width: 50%;
+  padding: 15px;
+  border-radius: 10px;
+}
