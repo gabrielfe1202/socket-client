@@ -1,8 +1,14 @@
 #root {
-  max-width: 1280px;
+  max-width: 70%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2rem 0;
   text-align: center;
+  justify-content: center;  
+}
+
+body{
+  background: rgb(19,67,89);
+  background: radial-gradient(circle, rgba(19,67,89,1) 68%, rgba(3,36,89,1) 89%);
 }
 
 .logo {
@@ -39,4 +45,25 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.inputMessage{
+  width: 90%;
+  font-size: 25px;
+  padding: 5px 10px;
+}
+
+.sendButton{
+  background-color: #535bf2;
+  font-size: 31px;
+  padding: 5px 25px;
+}
+
+.userName{
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  text-align: left;
+  font-weight: 900;  
+  font-size: 18px;
 }

@@ -1,78 +1,57 @@
-import { useState, useEffect } from 'react'
-import io from 'socket.io-client';
+import { useState, useEffect, useRef } from 'react'
 import './App.css'
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
+import Chat from './pages/Chat';
 
-const socket = io('ws://10.3.58.27:3000', {
-  transports: ['websocket']
-});
+function Home() {
+  const [name, setName] = useState("");
+  const navigate = useNavigate();
 
-type message = {
-  client: string,
-  text: string
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    if(name != ""){
+      navigate(`/Chat?name=${encodeURIComponent(name)}`);
+    }else{
+      alert("Nome invalido!")
+    }
+  }
+  ;
+  function capitalizeFirstLetter(string: string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
+  return (
+    <div>
+      <h1 style={{textAlign: 'center'}}>Diga seu nome</h1>
+      <form onSubmit={handleSubmit} style={{display: 'flex',flexDirection: 'column'}}>
+        <input
+        style={{          
+          paddingInline: 15,
+          paddingTop: 5,
+          paddingBottom: 5,
+          fontSize: 20,
+          marginBottom: 15
+        }}
+          type="text"
+          value={name}
+          onChange={(e) => setName(capitalizeFirstLetter(e.target.value))}
+          placeholder="Nome"
+        />
+        <button type="submit">Entrar</button>
+      </form>
+    </div>
+  );
 }
 
 function App() {  
-  const [userId, setUserId] = useState<string>('')
-  const [messages, setMessages] = useState<message[]>([]);
-  
-  const [message, setMessage] = useState<string>('');
-
-  useEffect(() => {
-    
-    socket.on('MESSAGE', (newMessage: message) => {
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-      console.log(newMessage)
-    });
-
-    setUserId(socket.id || '')
-
-    return () => {
-      socket.off('MESSAGE');
-    };
-  }, []);
-
-  const sendMessage = () => {
-    if (message.trim()) {
-      socket.emit('MESSAGE', message);
-      setUserId(socket.id || '')
-      setMessage('');
-    }
-  };
 
   return (
-    <>
-      <div className='largo'>
-      <h1>Chat</h1>
-      <div>
-        <div className='mensagens'>
-          {messages.map((msg: message, index) => {
-            console.log(msg)
-            console.log("user: " + userId)
-            console.log("msg: " + msg.client)
-            if(userId == msg.client){
-            return (                        
-              <div className='mensagem' key={index}>
-                <div>
-                  {msg.text}
-                </div>
-                </div>
-            )
-            }else{
-              return (                        
-                <div className='mensagem outrouser' style={{justifyContent: 'flex-start'}} key={index}><div>{msg.text}</div></div>
-              )
-            }
-          })}
-        </div>
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button onClick={sendMessage}>Send</button>
-      </div>
-    </div>
-    </>
+    <Router>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/Chat" element={<Chat />} />
+    </Routes>
+  </Router>   
   )
 }
 

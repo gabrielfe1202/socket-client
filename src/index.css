@@ -69,16 +69,21 @@ button:focus-visible {
 
 
 .outrouser>div{
-  background: #1a1a1a;
+  background: #747bff;
   justify-content: flex-start !important;
+  margin-left: 15px;
+  padding-top: 0 !important;
 }
 
 .mensagens{
   width: 100%;
   display: flex;
   flex-direction: column;
-  height: 550px;
-  overflow: auto;
+  height: 70vh;
+  overflow: auto;  
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 20px;  
+  margin-bottom: 20px;
 }
 
 #root{
@@ -99,4 +104,19 @@ button:focus-visible {
   max-width: 50%;
   padding: 15px;
   border-radius: 10px;
+  background-color: #535bf2;
+  margin-top: 5px;
+  margin-right: 15px;
+  font-size: 20px;
+}
+
+input{
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 15px;
+  color: #fff;
+}
+
+::placeholder{
+  color: #fff
 }
