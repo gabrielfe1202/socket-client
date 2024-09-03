@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { faPaperPlane, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import "../App.css";
 
-const socket = io("ws://10.3.41.20:3000", {
+const socket = io("ws://192.168.15.18:3000", {
   transports: ["websocket"],
 });
 
@@ -20,22 +21,25 @@ function Chat() {
   const [messages, setMessages] = useState<message[]>([]);
   const [message, setMessage] = useState<string>("");
   const chatContainerRef = useRef(null);
+  const navigate = useNavigate();
 
   const queryParams = new URLSearchParams(window.location.search);
   const name = queryParams.get("name");
   const room = queryParams.get("room");
+  
 
-  useEffect(() => {
+  useEffect(() => {    
+
     socket.emit("JOIN", { room, name });
-
-    socket.on("JOINUSER", (newUser: message) => {
-      console.log(newUser);
-    });
 
     socket.on("MESSAGE", (newMessage: message) => {
       setMessages((prevMessages) => [...prevMessages, newMessage]);
       console.log(newMessage);
     });
+
+    socket.on("previousMessages", (msg: message[]) => {      
+      setMessages(msg)
+    })
 
     setUserId(socket.id || "");
 
@@ -52,6 +56,11 @@ function Chat() {
     }
   };
 
+  const leaveRoom = () => {
+    socket.emit("leaveRoom")
+    navigate(`/`);
+  }
+
   useEffect(() => {
     const chatContainer = chatContainerRef.current;
     if (chatContainer != null) {
@@ -62,7 +71,17 @@ function Chat() {
   return (
     <>
       <div className="largo">
-        <h1>Chat</h1>
+        <button
+          style={{
+            position: "absolute",
+            top: 15,
+            left: 15
+          }}
+          onClick={leaveRoom}
+        >
+          <FontAwesomeIcon icon={faArrowLeft} />
+        </button>
+        <h1>Sala <span style={{color: 'rgb(255,113,113)'}}>{room}</span></h1>
         <div>
           <div className="mensagens" ref={chatContainerRef}>
             {messages.map((msg: message, index) => {
@@ -90,10 +109,10 @@ function Chat() {
                   );
                 }
               } else {
-                return(
-                    <div className="notification">
-                        <p style={{fontSize: 25, color: '#fff',margin: 0,padding: 0}}>{msg.name} entrou</p>
-                    </div>
+                return (
+                  <div className="notification">
+                    <p style={{ fontSize: 25, color: '#fff', margin: 0, padding: 0 }}>{msg.text}</p>
+                  </div>
                 )
               }
             })}
